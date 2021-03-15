@@ -3,20 +3,21 @@ package com.example.fragments;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SimpleFragment extends Fragment {
 
     // The radio button choice has 3 states: 0 = yes, 1 = no,
     // 2 = default (no choice). Using only 0 and 1.
-    private static final int YES = 0;
-    private static final int NO = 1;
+    public static final int YES = 0;
+    public static final int NO = 1;
 
     public SimpleFragment() {
         // Required empty public constructor
@@ -24,18 +25,20 @@ public class SimpleFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceStates) {
-
-        // Inflate the layout for this fragment.
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.activity_simple_fragment,
                 container, false);
         final RadioGroup radioGroup = rootView.findViewById(R.id.radio_group);
+        final RatingBar ratingBar =
+                rootView.findViewById(R.id.ratingBar);
 
         // Set the radioGroup onCheckedChanged listener.
         radioGroup.setOnCheckedChangeListener(
                 new RadioGroup.OnCheckedChangeListener() {
                     @Override
-                    public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    public void onCheckedChanged(RadioGroup group,
+                                                 int checkedId) {
                         View radioButton = radioGroup.findViewById(checkedId);
                         int index = radioGroup.indexOfChild(radioButton);
                         TextView textView =
@@ -54,10 +57,21 @@ public class SimpleFragment extends Fragment {
                     }
                 });
 
-        // Return the View for the fragment's UI.
+        // Set the rating bar onCheckedChanged listener.
+        ratingBar.setOnRatingBarChangeListener
+                (new RatingBar.OnRatingBarChangeListener() {
+                    @Override
+                    public void onRatingChanged(RatingBar ratingBar,
+                                                float rating, boolean fromUser) {
+                        // Get rating and show Toast with rating.
+                        String myRating = (getString(R.string.my_rating) +
+                                String.valueOf(ratingBar.getRating()));
+                        Toast.makeText(getContext(), myRating,
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+
         return rootView;
-
     }
-
 
 }
